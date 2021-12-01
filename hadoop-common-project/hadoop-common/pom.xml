@@ -410,6 +410,19 @@
     </resources>
     <plugins>
       <plugin>
+        <groupId>org.ekstazi</groupId>
+        <artifactId>ekstazi-maven-plugin</artifactId>
+        <version>5.3.1</version>
+        <executions>
+          <execution>
+            <id>ekstazi</id>
+            <goals>
+              <goal>select</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.xolstice.maven.plugins</groupId>
         <artifactId>protobuf-maven-plugin</artifactId>
         <executions>
