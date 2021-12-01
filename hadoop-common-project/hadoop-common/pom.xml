@@ -376,6 +376,12 @@
       <artifactId>lz4-java</artifactId>
       <scope>provided</scope>
     </dependency>
+          <dependency>
+          <groupId>org.ekstazi</groupId>
+          <artifactId>org.ekstazi.core</artifactId>
+          <version>5.3.1</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
 
   <build>

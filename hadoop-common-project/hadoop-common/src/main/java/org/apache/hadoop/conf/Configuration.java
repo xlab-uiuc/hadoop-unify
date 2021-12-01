@@ -110,6 +110,8 @@ import org.w3c.dom.Element;
 import org.apache.hadoop.thirdparty.com.google.common.base.Preconditions;
 import org.apache.hadoop.thirdparty.com.google.common.base.Strings;
 
+import org.ekstazi.configAware.*;
+
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -1219,11 +1221,14 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    *         or null if no such property exists.
    */
   public String get(String name) {
+    String unifyParam = name; //UNIFY_TESTS
     String[] names = handleDeprecation(deprecationContext.get(), name);
     String result = null;
     for(String n : names) {
+      unifyParam = n; //UNIFY_TESTS
       result = substituteVars(getProps().getProperty(n));
     }
+    ConfigListener.recordGetConfig(unifyParam, result); //UNIFY_TESTS
     return result;
   }
 
@@ -1311,11 +1316,14 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    *         its replacing property and null if no such property exists.
    */
   public String getRaw(String name) {
+    String unifyParam = name; //UNIFY_TESTS
     String[] names = handleDeprecation(deprecationContext.get(), name);
     String result = null;
     for(String n : names) {
+      unifyParam = n; //UNIFY_TESTS
       result = getProps().getProperty(n);
     }
+    ConfigListener.recordGetConfig(unifyParam, result); //UNIFY_TESTS
     return result;
   }
 
@@ -1387,6 +1395,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
     if (deprecations.getDeprecatedKeyMap().isEmpty()) {
       getProps();
     }
+    //ConfigListener.recordGetConfig(name, value); //UNIFY_TESTS
     getOverlay().setProperty(name, value);
     getProps().setProperty(name, value);
     String newSource = (source == null ? "programmatically" : source);
@@ -1397,6 +1406,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
       if(altNames != null) {
         for(String n: altNames) {
           if(!n.equals(name)) {
+            //ConfigListener.recordGetConfig(name, value); //UNIFY_TESTS
             getOverlay().setProperty(n, value);
             getProps().setProperty(n, value);
             putIntoUpdatingResource(n, new String[] {newSource});
@@ -1408,6 +1418,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
       String[] names = handleDeprecation(deprecationContext.get(), name);
       String altSource = "because " + name + " is deprecated";
       for(String n : names) {
+        //ConfigListener.recordGetConfig(name, value); //UNIFY_TESTS
         getOverlay().setProperty(n, value);
         getProps().setProperty(n, value);
         putIntoUpdatingResource(n, new String[] {altSource});
@@ -1480,11 +1491,14 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    *         doesn't exist.                    
    */
   public String get(String name, String defaultValue) {
+    String unifyParam = name; //UNIFY_TESTS
     String[] names = handleDeprecation(deprecationContext.get(), name);
     String result = null;
     for(String n : names) {
+      unifyParam = n; //UNIFY_TESTS
       result = substituteVars(getProps().getProperty(n, defaultValue));
     }
+    ConfigListener.recordGetConfig(unifyParam, result); //UNIFY_TESTS
     return result;
   }
 
