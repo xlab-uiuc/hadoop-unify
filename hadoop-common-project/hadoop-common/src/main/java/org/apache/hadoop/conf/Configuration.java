@@ -1395,7 +1395,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
     if (deprecations.getDeprecatedKeyMap().isEmpty()) {
       getProps();
     }
-    //ConfigListener.recordGetConfig(name, value); //UNIFY_TESTS
+    ConfigListener.recordSetConfig(name, value); //UNIFY_TESTS
     getOverlay().setProperty(name, value);
     getProps().setProperty(name, value);
     String newSource = (source == null ? "programmatically" : source);
@@ -1406,7 +1406,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
       if(altNames != null) {
         for(String n: altNames) {
           if(!n.equals(name)) {
-            //ConfigListener.recordGetConfig(name, value); //UNIFY_TESTS
+            ConfigListener.recordSetConfig(name, value); //UNIFY_TESTS
             getOverlay().setProperty(n, value);
             getProps().setProperty(n, value);
             putIntoUpdatingResource(n, new String[] {newSource});
@@ -1418,7 +1418,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
       String[] names = handleDeprecation(deprecationContext.get(), name);
       String altSource = "because " + name + " is deprecated";
       for(String n : names) {
-        //ConfigListener.recordGetConfig(name, value); //UNIFY_TESTS
+        ConfigListener.recordSetConfig(name, value); //UNIFY_TESTS
         getOverlay().setProperty(n, value);
         getProps().setProperty(n, value);
         putIntoUpdatingResource(n, new String[] {altSource});
@@ -1492,13 +1492,21 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    */
   public String get(String name, String defaultValue) {
     String unifyParam = name; //UNIFY_TESTS
+    Boolean defaultFlag = true; //UNIFY_TESTS
     String[] names = handleDeprecation(deprecationContext.get(), name);
     String result = null;
     for(String n : names) {
       unifyParam = n; //UNIFY_TESTS
       result = substituteVars(getProps().getProperty(n, defaultValue));
+      if (getProps().getProperty(n) != null) {
+        defaultFlag = false;
+      }
     }
-    ConfigListener.recordGetConfig(unifyParam, result); //UNIFY_TESTS
+    if (defaultFlag) {
+      ConfigListener.recordGetConfig(unifyParam, result + "@DEFAULTVALUE4CONFIGAWARE@"); //UNIFY_TESTS
+    } else {
+      ConfigListener.recordGetConfig(unifyParam, result); //UNIFY_TESTS
+    }
     return result;
   }
 
